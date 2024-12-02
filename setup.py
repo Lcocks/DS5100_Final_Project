@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 #Setup for the DS5100 Final Project of a Monte_Carlo_Simulator dice creation, Game, and Analyzer and its corresponding test file.
 
 setup(
-    name='Setup_for_Monte_Carlo_Simulator',
+    name='Monte_Carlo_Simulator',
 
     version='0.1',
 
