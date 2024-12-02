@@ -188,6 +188,9 @@ class Analyzer():
         returns: An integer value for the number of jackpots achieved in a game.
         """
         jackpot_count = (self.game.results().nunique(axis=1) == 1).sum()
+        if len(self.game.results().nunique(axis=0)) == 1:
+            print('Cannot get a jackpot with 1 die! Try again with multiple.')
+            return
         return int(jackpot_count)
         
     def face_count_per_roll(self):
@@ -218,3 +221,5 @@ class Analyzer():
         perm_df = self.game.results().apply(lambda row: list(row), axis = 1)
         perm_df = perm_df.value_counts().reset_index(name = 'Frequency').rename(columns = {'index': 'Combination'})
         return perm_df
+
+        

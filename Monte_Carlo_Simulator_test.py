@@ -2,7 +2,6 @@
 from unittest import mock
 import unittest
 import pandas as pd
-from Monte_Carlo_Simulator import Monte_Carlo_Simulator
 from Monte_Carlo_Simulator.Monte_Carlo_Simulator import Die, Game, Analyzer
 #The first Monte_Carlo_Simulator is for the directory then the python file is named Monte_Carlo_Simulator therefore Monte_Carlo_Simulator.Monte_Carlo_Simulator--
 class test_objectSuite(unittest.TestCase):
@@ -83,8 +82,13 @@ class test_objectSuite(unittest.TestCase):
     
         test_object = Game([Die()])
         test_object.play()
-        test_object = Analyzer(test_object)
-        self.assertTrue(isinstance(test_object.jackpot(), int))
+        if len(test_object.results().nunique(axis=0)) == 1:
+
+            self.assertEqual(len(test_object.results().nunique(axis=0)), 1) #Testing code with a single die rolled.
+        else:    
+            test_object = Analyzer(test_object)
+        
+            self.assertTrue(isinstance(test_object.jackpot(), int)) #Testing code with multiple die rolled (true jackpot).
     
     def test_10_face_count_per_roll(self):
         

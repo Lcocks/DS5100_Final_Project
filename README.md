@@ -5,9 +5,7 @@
 
 The final project for Data Science programming. Includes a module.
 
-Synopsis: 
-Show brief demo code of how the classes are used, i.e. code snippets showing how to install, import, and use the code to (1) create dice, (2) play a game, and (3) analyze a game. You can use preformatted blocks for the code.
-
+### Synopsis
 
 #### Install
 The Monte Carlo Simulation of Dice rolling can be installed on any platform that has python and access to the internet. The repo is public.
@@ -40,37 +38,37 @@ Another option is to import the overall python file and use its name as well wit
 import Monte_Carlo_Simulator
 ```
 
-
-#### Synopsis
+#### Need to Know
 
 <ins>This module can be used as a Monte Carlo Simulator with the scenario of choosing a dice (weighted or not), playing a game with that dice (rolling it), and analyzing information about the game played. 
 The game can be played with more than one die as long as they have the same number of faces.</ins>
 
-In order to properly use the code only a few things should be known.
+In order to properly use the code a few things should be known.
 
 The `Die()` class does not require any arguments to be manually input and on default will create a 100 sided die with 'fair' (equal) weights for each face. Things to know about the methods:
     `new_weight`: This will require user input for the faces you would like to use in comma seperate numerics (ex. 1, 2, 3) and any numeric is possible for the wieght input. This will change those listed faces (sides) to the new weight so if multiple weights are wanted please run thid method multiple times for each selection of faces.
-    
     `die_roll`: This does not require an argument `rolls` but it is optional to test roll your die a certain number of times (preset at `1` for 1 roll). Use a integer for this argument.
-    
     `show_data`: This does not require any arguments and will naturally show a copy of the internal Pandas dataframe representing the faces and weights of the die through the argument `highlight` with a default value of `1`. Using the method with the value of `2` will return a table of the internal Pandas dataframe but with an Numpy array assortment and rows highlighted red that have any other values than `1.0` for the weight.
     
 The `Game()` class does require the argument `dice` have a list of `Die()` with the same number of faces. It has no default. Things to know about the methods:
     `play`: This does not require any arguments as the default for `dice_rolls` is `1` however if rolling the set of dice more than 1 time please enter another integer value for this argument.
-    
     `results`: This does not require any arguments as the default for `df_format` is `1` indicating a 'wide' Pandas dataframe. The other option is `2` which will result in a 'narrow' Pandas dataframe.
     
 The `Analyzer()` class does require the argument `game` have an instance of the `Game()` class that has called the `play` method. This will have created and internally stored a Pandas dataframe of play results. Things to know about the methods:
     `jackpot`: This does not require any arguments and will display an integer of the number times a jackpot has been rolled. A jackpot occurs if an instance of rolling the dice results in them all landing on the same face. If you roll a die 6 times (ex. `Game().play(6)`) then there are six chances for hitting the jackpot.
-    
     `face_count_per_roll`: This does not require any arguments and will return a Pandas dataframe of the play data with an index of the roll number, face values as columns, and count values in the cells (i.e. it is in wide format). If there is a face that is not rolled for any of the dice in any of the rolling instances (rows) then that value will not display in the table as a column.
-    
     `combo_count`: This does not require any arguments and will return a Pandas dataframe with a multiindex for the rows and `Combination` for each distinct combination, and the column `Frequency` for the count for how many times the combination occurs in the game. These will be combinations of any order.
-    
     `permutation`: This does not require any arguments and will return a Pandas dataframe with the mutltiindex for rows and `Combination` for each distinct combination, and the count `Frequency` for how many times that combination occurs in the game. These will be combinations of the exact order rolled.
 
-
-## Do not describe private methods and attributes.
+<ins>After follwing the install and import above, and understanding more of the different classes and their methods there is only one thing to do now. Test!</ins>
+In order to best test this file working properly on your device please use the Monte_Carlo_Simulator_test.py file and run it from your command line on which you installing the package. 
+After testing has been passed then running this code will create your first die, play a game with it, and display the results along with if you hit any jackpots!
+```
+from Monte_Carlo_Simulator.Monte_Carlo_Simulator import Die, Game, Analyzer
+Game1 = Game([Die()])
+Game1.play()
+Game1.results
+```
 
 #### API description: 
 This will list all the classes and methods with their attributes along with comments and docstrings. All parameters (with data types and defaults) have been described above and will show the code referenced along with all returns. 
@@ -107,7 +105,7 @@ Methods:
         _df = pd.DataFrame({'Faces': self.faces, 'Weight': list(1.0 for i in range(len(self.faces)))}).set_index('Faces')
         self._df = _df
 ```
-2) new_weight
+2) new_weight method
 ```
     def new_weight(self): 
 ```
@@ -127,7 +125,7 @@ Methods:
             self._df.loc[i, 'Weight'] = weight
         print(f"Faces {chg_face} have a new weight of {weight}.")
 ```
-3) die_roll
+3) die_roll method
 ```
     def die_roll(self, rolls = 1):
 ```
@@ -146,7 +144,7 @@ Methods:
 #            results.append(roll)
 #        return results
 ```
-4) show_data
+4) show_data method
 ```
     def show_data(self, highlight = False):
 ```
@@ -175,7 +173,7 @@ class Game():
     Game objects only keep the results of their most recent play.
     inputs: self; dice: A Die() object wrapped in a python list to be a singular Die() or many.
 
-1) Constructor
+1) Constructor method
 ``` 
     def __init__(self, dice):
 ```
@@ -197,7 +195,7 @@ class Game():
                 if _length != len(self.dice[i]._df.index):
                     raise ValueError("The number of Faces for at least one of the Die are not the same as the others!")
 ```
-2) play
+2) play method
 ```
     def play(self, dice_rolls = 1):
 ```
@@ -219,7 +217,7 @@ class Game():
         #return _dice_rolling_results
 ```
 ```
-3) results
+3) results method
 ```
     def results(self, df_format = 1):
 ```
@@ -249,7 +247,7 @@ class Analyzer():
     This class will take the results of a single game and compute various descriptive statistical properties about said game.
     inputs: self; game: A Game() object of which the play() method of Game() has been run for, to insure a .
 
-1) Constructor
+1) Constructor method
 ```
     def __init__(self, game):
 ```
@@ -262,7 +260,7 @@ class Analyzer():
         if isinstance(self.game, type(Game([Die()]))) == False:
             raise ValueError("The passed object is not a Game, passing only a Game type object will work.")
 ```
-2) jackpot
+2) jackpot method
 ```
     def jackpot(self):
 ```
@@ -273,7 +271,7 @@ class Analyzer():
         jackpot_count = (self.game.results().nunique(axis=1) == 1).sum()
         return int(jackpot_count)
 ```
-3) face_count_per_roll
+3) face_count_per_roll method
 ```
     def face_count_per_roll(self):
 ```
@@ -283,7 +281,7 @@ class Analyzer():
 ```
         return self.game.results().apply(pd.Series.value_counts, axis=1).fillna(0).astype(int)
 ```
-3) combo_count
+3) combo_count method
 ```
     def combo_count(self):
 ```
@@ -295,7 +293,7 @@ class Analyzer():
         combo_df = combo_df.value_counts().reset_index(name = 'Frequency').rename(columns = {'index': 'Combination'})
         return combo_df
 ```
-4) permutation
+4) permutation method
 ```
     def permutation(self):
 ```
