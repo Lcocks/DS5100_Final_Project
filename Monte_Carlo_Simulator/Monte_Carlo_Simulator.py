@@ -1,4 +1,4 @@
-
+#Monte_Carlo_Simulator
 """
 Classes include Die(): Making a die to roll, Game(): Creating a game of rolling dice, and Analyzer(): Looking at metrics of a Game.
 
@@ -13,20 +13,18 @@ import random
 #Die Creation.
 class Die():
     """
-    This class is for creating a 100 sided (or less) die stored as a Pandas Dataframe. The number of faces and weights of the die will be adjustable to allow for the die to be used as any other die that has less than 100 sides. 
-    The die can also be customized by the weight to allow for either a fair sided die or a unfairly distributed die.
-    
-    The inputs for this class will be the number of sides for the die, the weight for each side (by grouping), and the return will be a usable die for another class however you can still roll a die with this class.
-    
-    Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame created with a NumPy Array.
+    This class is for creating a 100 sided (default count) die stored as a Pandas Dataframe. The number of faces and weights of the die will be adjustable to allow for the die to be used as any other die. 
+    The die can also be customized by the weight to allow for either a fair sided die or a unfairly distributed die.The weights are just positive numbers (integers or floats, including  0).
+    Die() will initialize a Pandas DataFrame to be used through the class.
+    inputs: self; faces: Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame. Created with a NumPy Array is mandatory.
     """
 
     def __init__(self, faces = np.arange(1,101)):
         """
         __init__: This intializer will serve to create the DataFrame, set the initial Face count to 100 unless otherwise fed an Numpy Array, and Weight distribution to 1.0 evenly.
                   It will also set the faces to the index of the DataFrame as Faces.
-        inputs: self; faces: will default to a Numpy Array of 1-100
-        returns: No return values
+        inputs: self; faces: will default to a Numpy Array of 1-100.
+        returns: No return values.
         """
         self.faces = faces
         
@@ -90,7 +88,7 @@ class Die():
             is_max = pd.Series(data=False, index=_df.index)
             is_max['Weight'] = _df.loc['Weight'] != threshold
             return ['background-color: red' if is_max.any() else '' for v in is_max]
-        display(self._df.copy().style.apply(highlight_row, threshold=1, column='Weight', axis=1)) #Diplsaying dataframe and highlighted rows
+        return self._df.copy().style.apply(highlight_row, threshold=1, column='Weight', axis=1) #Displaying table and highlighted rows
         
         
 
@@ -99,13 +97,17 @@ class Die():
 class Game():
     """
     This class is for creating a Die rolling game that has the same number of sides for each die but the weights can vary for the die.
+    Each game is initialized with a Python list that contains one or more dice of the Die() object type.
+    Game objects have a behavior to play a game, i.e. to roll all of the dice a given number of times.
+    Game objects only keep the results of their most recent play.
+    inputs: self; dice: A Die() object wrapped in a python list to be a singular Die() or many.
     """
     
     def __init__(self, dice):
         """
         __init__: This initializer will need a list of Die in a list format. It will insure that the number of entered Faces for each Die are equal.
         inputs: self; dice: has no default as a list of Die's created through another class is required.
-        returns: no return values
+        returns: No return values.
         """
         self.dice = dice
         #Returning a ValueError if the input dice are not in list format.
@@ -125,8 +127,9 @@ class Game():
         """
         play: This method is used for rolling all of the Dice given to the class a specified number of times and storing those results in a private dataframe.
         inputs: self; dice_rolls: defaults to 1 for 1 rolling of each Die.
-        returns: no return values
+        returns: No return values.
         """
+        dice_rolls = abs(dice_rolls)
         #Private dataframe instantiation
         _dice_rolling_results = pd.DataFrame()
         
@@ -143,7 +146,7 @@ class Game():
         """
         results: This method is used to display the rolling results in either a Wide (default) or Narrow formatted dataframe.
         inputs: self; df_format: defaults to 1 and will only accept either 1 (corresponding to Wide) or 2 (corresponding to Narrow).
-        returns: a copy of the private dataframe in the specified format.
+        returns: A copy of the private dataframe in the specified format.
         """
         if not(df_format in (1,2)):
             raise ValueError("Formatting can only be entered as '1' for Wide or '2' for Narrow.")
@@ -165,12 +168,13 @@ class Game():
 class Analyzer():
     """
     This class will take the results of a single game and compute various descriptive statistical properties about said game.
+    inputs: self; game: A Game() object of which the play() method of Game() has been run for, to insure a .
     """
     def __init__(self, game):
         """
         __init__: The initializer will require a Game instance be input and verify its correct object orientation.
-        inputs: self; game: has no default as a Game object is required
-        returns: No return values
+        inputs: self; game: has no default as a Game object is required.
+        returns: No return values.
         """
         self.game = game
         #testing will require using the two classes Die() and Game().
@@ -209,9 +213,8 @@ class Analyzer():
         permutation: This method will create a new dataframe containing the counts of each distinct combination (of only the rolled order) of faces in their current rolled order """\
         """for each of the times rolled in the game.
         inputs: self
-        returns: A dataframe with the mutliindex for rows and Combination for each distinct combination, and the count for how many times that combination occurs in the game.
+        returns: A dataframe with the mutltiindex for rows and Combination for each distinct combination, and the count Frequency for how many times that combination occurs in the game.
         """
         perm_df = self.game.results().apply(lambda row: list(row), axis = 1)
         perm_df = perm_df.value_counts().reset_index(name = 'Frequency').rename(columns = {'index': 'Combination'})
         return perm_df
-        

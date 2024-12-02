@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
-#Setup for the DS5100 Final Project of a Die creation, Game, and Analyzer and its corresponding test file.
+#Setup for the DS5100 Final Project of a Monte_Carlo_Simulator dice creation, Game, and Analyzer and its corresponding test file.
 
 setup(
-    name='Setup_for_DS5100_Final_Project',
+    name='Setup_for_Monte_Carlo_Simulator',
 
     version='0.1',
 
-    description='Package created for using and testing Final_Project.',
+    description='Monte_Carlo_Simulator Package created for using and testing Final_Project.',
 
     url='https://github.com/Lcocks/DS5100_Final_Project',
 
