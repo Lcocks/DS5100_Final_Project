@@ -45,16 +45,16 @@ The game can be played with more than one die as long as they have the same numb
 
 In order to properly use the code a few things should be known.
 
-The `Die()` class does not require any arguments to be manually input and on default will create a 100 sided die with 'fair' (equal) weights for each face. Things to know about the methods:
+The `Die()` **class** does not require any arguments to be manually input and on default will create a 100 sided die with 'fair' (equal) weights for each face. Things to know about the methods:
     `new_weight`: This will require user input for the faces you would like to use in comma seperate numerics (ex. 1, 2, 3) and any numeric is possible for the wieght input. This will change those listed faces (sides) to the new weight so if multiple weights are wanted please run thid method multiple times for each selection of faces.
     `die_roll`: This does not require an argument `rolls` but it is optional to test roll your die a certain number of times (preset at `1` for 1 roll). Use a integer for this argument.
     `show_data`: This does not require any arguments and will naturally show a copy of the internal Pandas dataframe representing the faces and weights of the die through the argument `highlight` with a default value of `1`. Using the method with the value of `2` will return a table of the internal Pandas dataframe but with an Numpy array assortment and rows highlighted red that have any other values than `1.0` for the weight.
     
-The `Game()` class does require the argument `dice` have a list of `Die()` with the same number of faces. It has no default. Things to know about the methods:
+The `Game()` **class** does require the argument `dice` have a list of `Die()` with the same number of faces. It has no default. Things to know about the methods:
     `play`: This does not require any arguments as the default for `dice_rolls` is `1` however if rolling the set of dice more than 1 time please enter another integer value for this argument.
     `results`: This does not require any arguments as the default for `df_format` is `1` indicating a 'wide' Pandas dataframe. The other option is `2` which will result in a 'narrow' Pandas dataframe.
     
-The `Analyzer()` class does require the argument `game` have an instance of the `Game()` class that has called the `play` method. This will have created and internally stored a Pandas dataframe of play results. Things to know about the methods:
+The `Analyzer()` **class** does require the argument `game` have an instance of the `Game()` class that has called the `play` method. This will have created and internally stored a Pandas dataframe of play results. Things to know about the methods:
     `jackpot`: This does not require any arguments and will display an integer of the number times a jackpot has been rolled. A jackpot occurs if an instance of rolling the dice results in them all landing on the same face. If you roll a die 6 times (ex. `Game().play(6)`) then there are six chances for hitting the jackpot.
     `face_count_per_roll`: This does not require any arguments and will return a Pandas dataframe of the play data with an index of the roll number, face values as columns, and count values in the cells (i.e. it is in wide format). If there is a face that is not rolled for any of the dice in any of the rolling instances (rows) then that value will not display in the table as a column.
     `combo_count`: This does not require any arguments and will return a Pandas dataframe with a multiindex for the rows and `Combination` for each distinct combination, and the column `Frequency` for the count for how many times the combination occurs in the game. These will be combinations of any order.

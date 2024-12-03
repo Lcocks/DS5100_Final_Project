@@ -76,7 +76,7 @@ class Die():
     def show_data(self, highlight = False):
         """
         show_data: This method is for displaying the full table of data with its Faces and their corresponding weights with changes highlighted along with a dataframe returned value.
-                   A custom function highlight_row() will also highlight any weights that do not have the default value of 1.
+                   A custom function highlight_row() will also highlight any weights that do not have the default value of 1. Use display() to print this dataset
         inputs: self; highlight: default value is False andmethod returns a dataframe, any other input returns a display of the data and highlighted rows.
         returns: A fully laid out copy of the private DataFrame if highlight = False, otherwise returns a display of the data and highlighted rows.
         """
@@ -88,7 +88,7 @@ class Die():
             is_max = pd.Series(data=False, index=_df.index)
             is_max['Weight'] = _df.loc['Weight'] != threshold
             return ['background-color: red' if is_max.any() else '' for v in is_max]
-        return self._df.copy().style.apply(highlight_row, threshold=1, column='Weight', axis=1) #Displaying table and highlighted rows
+        return print(self._df.copy().style.apply(highlight_row, threshold=1, column='Weight', axis=1)) #Displaying table and highlighted rows
         
         
 
