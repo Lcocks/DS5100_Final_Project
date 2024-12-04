@@ -18,22 +18,29 @@ class Die():
     Die() will initialize a Pandas DataFrame to be used through the class.
     inputs: self; faces: Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame. Created with a NumPy Array is mandatory.
     """
-
+    
     def __init__(self, faces = np.arange(1,101)):
         """
-        __init__: This intializer will serve to create the DataFrame, set the initial Face count to 100 unless otherwise fed an Numpy Array, and Weight distribution to 1.0 evenly.
+        __init__: This intializer will serve to create the DataFrame, set the initial Face count to 100 unless otherwise fed an Numpy Array, and Weight is a distribution to 1.0 evenly.
                   It will also set the faces to the index of the DataFrame as Faces.
         inputs: self; faces: will default to a Numpy Array of 1-100.
         returns: No return values.
         """
         self.faces = faces
         
+        if type(faces[1]) == np.str_:
+            marker = '_str'
+        else:
+            marker = '_int'
+            
+        self.marker = marker
+        
         if isinstance(faces, np.ndarray) == False:
             raise TypeError("faces object must be of data type NumPy array and nothing else.")
         
         if np.unique(faces).size != len(faces):
             raise ValueError("The values in the numpy array faces must be distinct values.")
-        
+                
         _df = pd.DataFrame({'Faces': self.faces, 'Weight': list(1.0 for i in range(len(self.faces)))}).set_index('Faces')
         self._df = _df
         
@@ -43,17 +50,56 @@ class Die():
         inputs: self
         returns: No return values.
         """
-        chg_face = [int(x.strip()) for x in input("Which face would you like to change the weight? note: All faces have a default weight of 1.0.\nEnter the information in a comma seperated numerical list.").split(",")] #Can take a list of faces to change weights for.
-        for i in chg_face:  #Checking each value in chg_face list
-            if not(i in self._df.index.unique(level='Faces')):
-                raise IndexError("A value entered for face selection is not in the array of 1 to 100.")
-        weight = float(input("What would you like the new weight to be?")) #Getting input for weight then converting to float, if float fails, value error if non-numerical.
-        if not type(weight) is float:
-            raise TypeError("Convert to float did not work, please enter a number.")
+        if self.marker == '_int':
+            
+            chg_face = [int(float(x.strip())) for x in input("Which face would you like to change the weight? note: All faces have a default weight of 1.0.\nEnter the information in a comma seperated numerical list.").split(",")] #Can take a list of faces to change weights for.
+            for i in chg_face:  #Checking each value in chg_face list
+                if not(i in self._df.index.unique(level='Faces')):
+                    raise IndexError("A value entered for face selection is not in the array of 1 to 100.")
+                    
+            weight = float(input("What would you like the new weight to be?")) #Getting input for weight then converting to float, if float fails, value error if non-numerical.
+            if not type(weight) is float:
+                raise TypeError("Convert to float did not work, please enter a number.")
+            #Replacing the existing weights with the new weight.
+            for i in chg_face:
+                self._df.loc[i, 'Weight'] = weight
+            print(f"Face(s) {chg_face} have a new weight of {weight}.")
+            
+        elif self.marker == '_str':
+            
+            if input("Changing all values? Enter Yes or No") == 'No': #created for entering language letters and replacing all values.
+                
+                chg_face = [x.strip() for x in input("Which face would you like to change the weight? note: All faces have a default weight of 1.0.\nEnter the information in a comma seperated numerical list.").split(",")] #Can take a list of faces to change weights for.
+                for i in chg_face:  #Checking each value in chg_face list
+                    if not(i in self._df.index.unique(level='Faces')):
+                        raise IndexError("A value entered for face selection is not in the array of provided letters.")
+                        
+                weight = float(input("What would you like the new weight to be?")) #Getting input for weight then converting to float, if float fails, value error if non-numerical.
+                if not type(weight) is float:
+                    raise TypeError("Convert to float did not work, please enter a number.")
+                #Replacing the existing weights with the new weight.
+                for i in chg_face:
+                    self._df.loc[i, 'Weight'] = weight
+                print(f"Face(s) {chg_face} have a new weight of {weight}.")
+            
+            else:
+                
+                weight_list = [int(float(x.strip())) for x in input("List the weights in a comma seperated list with the total number of weights matching the total number of letters used to create the Die().").split(",")]
+                #creating a list of weights
+                if not type(weight_list[1]) is int:
+                    raise TypeError("Convert to float did not work, please enter a number.")
+
+                for i, j in enumerate(self.faces):
+                        self._df.loc[j, 'Weight'] = weight_list[i]
+                print(f"All faces have their new weights.")
+                
+        #weight = float(input("What would you like the new weight to be?")) #Getting input for weight then converting to float, if float fails, value error if non-numerical.
+        #if not type(weight) is float:
+        #    raise TypeError("Convert to float did not work, please enter a number.")
         #Replacing the axisting weights with the new weight.
-        for i in chg_face:
-            self._df.loc[i, 'Weight'] = weight
-        print(f"Faces {chg_face} have a new weight of {weight}.")
+        #for i in chg_face:
+        #    self._df.loc[i, 'Weight'] = weight
+        #print(f"Face(s) {chg_face} have a new weight of {weight}.")
     
     
     def die_roll(self, rolls = 1):
@@ -76,7 +122,7 @@ class Die():
     def show_data(self, highlight = False):
         """
         show_data: This method is for displaying the full table of data with its Faces and their corresponding weights with changes highlighted along with a dataframe returned value.
-                   A custom function highlight_row() will also highlight any weights that do not have the default value of 1. Use display() to print this dataset
+                   A custom function highlight_row() will also highlight any weights that do not have the default value of 1. Use display() to print this dataset.
         inputs: self; highlight: default value is False andmethod returns a dataframe, any other input returns a display of the data and highlighted rows.
         returns: A fully laid out copy of the private DataFrame if highlight = False, otherwise returns a display of the data and highlighted rows.
         """
@@ -88,10 +134,9 @@ class Die():
             is_max = pd.Series(data=False, index=_df.index)
             is_max['Weight'] = _df.loc['Weight'] != threshold
             return ['background-color: red' if is_max.any() else '' for v in is_max]
-        return print(self._df.copy().style.apply(highlight_row, threshold=1, column='Weight', axis=1)) #Displaying table and highlighted rows
+        return self._df.copy().style.apply(highlight_row, threshold=1, column='Weight', axis=1) #Displaying table and highlighted rows
         
         
-
 
 #Playing a Game with dice.
 class Game():
@@ -129,7 +174,7 @@ class Game():
         inputs: self; dice_rolls: defaults to 1 for 1 rolling of each Die.
         returns: No return values.
         """
-        dice_rolls = abs(dice_rolls)
+        dice_rolls = abs(dice_rolls) #ensures the assumed correct number of play
         #Private dataframe instantiation
         _dice_rolling_results = pd.DataFrame()
         

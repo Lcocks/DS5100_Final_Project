@@ -45,10 +45,10 @@ The game can be played with more than one die as long as they have the same numb
 
 In order to properly use the code a few things should be known.
 
-The `Die()` **class** does not require any arguments to be manually input and on default will create a 100 sided die with 'fair' (equal) weights for each face. Things to know about the methods:
+The `Die()` **class** does not require any arguments to be manually input and on default will create a 100 sided die with 'fair' (equal) weights for each face. **In order to change the number of faces use the `np.arange(1,3)` function as an argument to output a 2 sided die (coin) or anything other side count you like. Remember numpy will start at 0 so 1,3 gives 2 sides. Another option is to use `np.array([])` with string inputs to create a coin with `T` and `F` or an alphabet such as `np.array(['a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])`.** Things to know about the methods:
     `new_weight`: This will require user input for the faces you would like to use in comma seperate numerics (ex. 1, 2, 3) and any numeric is possible for the wieght input. This will change those listed faces (sides) to the new weight so if multiple weights are wanted please run thid method multiple times for each selection of faces.
     `die_roll`: This does not require an argument `rolls` but it is optional to test roll your die a certain number of times (preset at `1` for 1 roll). Use a integer for this argument.
-    `show_data`: This does not require any arguments and will naturally show a copy of the internal Pandas dataframe representing the faces and weights of the die through the argument `highlight` with a default value of `1`. Using the method with the value of `2` will return a table of the internal Pandas dataframe but with an Numpy array assortment and rows highlighted red that have any other values than `1.0` for the weight.
+    `show_data`: This does not require any arguments and will naturally show a copy of the internal Pandas dataframe representing the faces and weights of the die through the argument `highlight` with a default value of `1`. Using the method with the value of `2` will return a table of the internal Pandas dataframe but with an Numpy array assortment and rows highlighted red that have any other values than `1.0` for the weight; **`display()` is required to output this**.
     
 The `Game()` **class** does require the argument `dice` have a list of `Die()` with the same number of faces. It has no default. Things to know about the methods:
     `play`: This does not require any arguments as the default for `dice_rolls` is `1` however if rolling the set of dice more than 1 time please enter another integer value for this argument.
@@ -92,7 +92,8 @@ Methods:
                   It will also set the faces to the index of the DataFrame as Faces.
         inputs: self; faces: will default to a Numpy Array of 1-100
         returns: No return values.
-
+        
+        marker: Instance variable to tell if the Die is based on letters or numbers.
 2) new_weight method
 ```
     def new_weight(self): 
@@ -100,7 +101,10 @@ Methods:
         new_weight: This method has user input questions used to decide which Faces to change weights for. It will then adjust the weights held for those Faces within the DataFrame.
         inputs: self
         returns: No return values.
-
+        
+        chg_face: Local variable to store user input for which faces to change weights for.
+        weight: Local variable to store the user input for what the new weight(s) should be.
+        weight_list: Local variable to store the list of new weights for changing the entire dataframe of faces, must be in corresponding order with the create die faces.
 3) die_roll method
 ```
     def die_roll(self, rolls = 1):
@@ -163,7 +167,10 @@ class Game():
         results: This method is used to display the rolling results in either a Wide (default) or Narrow formatted dataframe.
         inputs: self; df_format: defaults to 1 and will only accept either 1 (corresponding to Wide) or 2 (corresponding to Narrow).
         returns: A copy of the dataframe in the specified format.
-
+        
+        copy: Local variable for storing the copied dataframe.
+        df_wide: Local variable for storing the wide formatted copied dataframe.
+        df_narrow: Local variable for storing the narrow formatted copied dataframe.
 C) Analyzer
 ```
 class Analyzer():
@@ -187,6 +194,7 @@ class Analyzer():
         inputs: self
         returns: An integer value for the number of jackpots achieved in a game.
 
+        jackpot_count: Local variable for storing the count of jackpots made through the play.
 3) face_count_per_roll method
 ```
     def face_count_per_roll(self):
@@ -203,6 +211,7 @@ class Analyzer():
         inputs: self
         returns: A dataframe with a multiindex for the rows and Combination for each distinct combination, and the column Frequency for the count for how many times the combination occurs in the game.
 
+        combo_df: Local variable used for holding the dataframe of combos and counts.
 4) permutation method
 ```
     def permutation(self):
@@ -212,7 +221,7 @@ class Analyzer():
         inputs: self
         returns: A dataframe with the mutltiindex for rows and Combination for each distinct combination, and the count Frequency for how many times that combination occurs in the game.
 
-
+        perm_df: Local variable used for holding the dataframe of permutations.
 
 
 

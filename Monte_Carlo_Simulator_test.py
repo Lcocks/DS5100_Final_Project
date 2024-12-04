@@ -37,14 +37,14 @@ class test_objectSuite(unittest.TestCase):
         test_object.die_roll()
         
         self.assertTrue(isinstance(test_object.die_roll(), list))
-    
+
     def test_4_show_data(self):
         
         test_object = Die()
         
         self.assertTrue(isinstance(test_object.show_data(), type(pd.DataFrame()))) #Testing for the regular dataframe output.
         
-        self.assertEqual(type(test_object.show_data(2)), type(None)) #Testing for the table return with styling.
+        self.assertEqual(type((test_object.show_data(2))), type(pd.DataFrame().style)) #Testing for the table return with styling.
     
     #Game()
     def test_5_Game(self):
