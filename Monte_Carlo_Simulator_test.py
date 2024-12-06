@@ -13,6 +13,9 @@ class test_objectSuite(unittest.TestCase):
     #Die()
     
     def test_1_Die(self):
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         
         test_object = Die()
         
@@ -20,7 +23,9 @@ class test_objectSuite(unittest.TestCase):
         
     @mock.patch('Monte_Carlo_Simulator.Monte_Carlo_Simulator.input', create=True)
     def test_2_new_weight(self, mocked_input):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure and the input changes.
+        """
         mocked_input.side_effect = ['1,2,3', '1.5']
         
         test_object = Die()
@@ -32,14 +37,18 @@ class test_objectSuite(unittest.TestCase):
         self.assertEqual(type(test_object._df), type(default._df)) #Testing the data structure output.
     
     def test_3_die_roll(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Die()
         test_object.die_roll()
         
         self.assertTrue(isinstance(test_object.die_roll(), list))
 
     def test_4_show_data(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure for either argument passing.
+        """
         test_object = Die()
         
         self.assertTrue(isinstance(test_object.show_data(), type(pd.DataFrame()))) #Testing for the regular dataframe output.
@@ -48,20 +57,26 @@ class test_objectSuite(unittest.TestCase):
     
     #Game()
     def test_5_Game(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Game([Die()])
         
         self.assertIsInstance(test_object, Game)
         
     def test_6_play(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Game([Die()])
         test_object.play()
         
         self.assertTrue(type(getattr(test_object,'_dice_rolling_results')), type(pd.DataFrame()))
         
     def test_7_results(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure for either argument passing.
+        """
         test_object = Game([Die()])
         test_object.play()
         
@@ -71,7 +86,9 @@ class test_objectSuite(unittest.TestCase):
     
     #Analyzer()
     def test_8_Analyzer(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Game([Die()])
         test_object.play()
         test_object = Analyzer(test_object)
@@ -79,7 +96,9 @@ class test_objectSuite(unittest.TestCase):
         self.assertIsInstance(test_object, Analyzer)
         
     def test_9_jackpot(self):
-    
+        """
+        This test method should verify that the target method creates an appropriate data structure for 2 different scenarios.
+        """
         test_object = Game([Die()])
         test_object.play()
         if len(test_object.results().nunique(axis=0)) == 1:
@@ -91,7 +110,9 @@ class test_objectSuite(unittest.TestCase):
             self.assertTrue(isinstance(test_object.jackpot(), int)) #Testing code with multiple die rolled (true jackpot).
     
     def test_10_face_count_per_roll(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Game([Die()])
         test_object.play()
         test_object = Analyzer(test_object)
@@ -99,7 +120,9 @@ class test_objectSuite(unittest.TestCase):
         self.assertTrue(isinstance(test_object.face_count_per_roll(), type(pd.DataFrame())))
         
     def test_11_combo_count(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Game([Die()])
         test_object.play()
         test_object = Analyzer(test_object)
@@ -107,7 +130,9 @@ class test_objectSuite(unittest.TestCase):
         self.assertTrue(isinstance(test_object.combo_count(), type(pd.DataFrame())))
         
     def test_12_permutation(self):
-        
+        """
+        This test method should verify that the target method creates an appropriate data structure.
+        """
         test_object = Game([Die()])
         test_object.play()
         test_object = Analyzer(test_object)

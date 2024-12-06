@@ -14,9 +14,9 @@ import random
 class Die():
     """
     This class is for creating a 100 sided (default count) die stored as a Pandas Dataframe. The number of faces and weights of the die will be adjustable to allow for the die to be used as any other die. 
-    The die can also be customized by the weight to allow for either a fair sided die or a unfairly distributed die.The weights are just positive numbers (integers or floats, including  0).
+    The die can also be customized by the weight to allow for either a fair sided die or an unfairly distributed die.The weights are just positive numbers (integers or floats, including  0).
     Die() will initialize a Pandas DataFrame to be used through the class.
-    inputs: self; faces: Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame. Created with a NumPy Array is mandatory.
+    inputs: self; faces: Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame. Created with a Numpy Array is mandatory.
     """
     
     def __init__(self, faces = np.arange(1,101)):
@@ -84,7 +84,7 @@ class Die():
             
             else:
                 
-                weight_list = [int(float(x.strip())) for x in input("List the weights in a comma seperated list with the total number of weights matching the total number of letters used to create the Die().").split(",")]
+                weight_list = [int(float(x.strip())) for x in input("List the weights in a comma seperated list with the total number of weights matching the order & total number of letters used to create the Die().").split(",")]
                 #creating a list of weights
                 if not type(weight_list[1]) is int:
                     raise TypeError("Convert to float did not work, please enter a number.")
@@ -105,7 +105,7 @@ class Die():
     def die_roll(self, rolls = 1):
         """
         die_roll: This method is used for rolling the create die using the DataFrame holding the data and a Random function random.choices to produce a random Face.
-                  The default version does not internall store the results, however the internally stored version is commented out if otherwise wanted.
+                  The default version does not internally store the results, however the internally stored version is commented out if otherwise wanted.
         inputs: self; rolls: default to 1.
         returns: An instance of rolling the die a number of times.
         """
@@ -213,7 +213,7 @@ class Game():
 class Analyzer():
     """
     This class will take the results of a single game and compute various descriptive statistical properties about said game.
-    inputs: self; game: A Game() object of which the play() method of Game() has been run for, to insure a .
+    inputs: self; game: A Game() object of which the play() method of Game() has been run for.
     """
     def __init__(self, game):
         """
@@ -240,12 +240,16 @@ class Analyzer():
         
     def face_count_per_roll(self):
         """
-        face_count_per_roll: This method is for counting and siplaying each of the times a certain face of the die is rolled for each of the rolls attempted. 
+        face_count_per_roll: This method is for counting and displaying each of the times a certain face of the die is rolled for each of the rolls attempted. 
         inputs: self
         returns: A dataframe with the possible faces rolled as the columns and each roll instance of the dice as the index. The values show the number of times (count) each of the faces is rolled.
         """
-        return self.game.results().apply(pd.Series.value_counts, axis=1).fillna(0).astype(int)
-        
+        all_faces = sorted(set(face for die in self.game.dice for face in die.faces))
+        face_counts = pd.DataFrame({face: self.game.results().apply(lambda row: row.tolist().count(face), axis=1) for face in all_faces}
+        )
+        face_counts.columns.name = 'Faces'
+        return face_counts
+    
     def combo_count(self):
         """
         combo_count: This method will create a new dataframe containing the counts of each distinct combination (of any order i.e. sorting each row) of faces rolled among the dice in each roll.
@@ -253,7 +257,7 @@ class Analyzer():
         returns: A dataframe with a multiindex for the rows and Combination for each distinct combination, and the column Frequency for the count for how many times the combination occurs in the game.
         """
         combo_df = self.game.results().apply(lambda row: list(sorted(row)), axis = 1)
-        combo_df = combo_df.value_counts().reset_index(name = 'Frequency').rename(columns = {'index': 'Combination'})
+        combo_df = combo_df.value_counts().reset_index(name = 'Frequency').rename(columns = {'index': 'Combination'}) 
         return combo_df
         
     def permutation(self):
@@ -261,7 +265,7 @@ class Analyzer():
         permutation: This method will create a new dataframe containing the counts of each distinct combination (of only the rolled order) of faces in their current rolled order """\
         """for each of the times rolled in the game.
         inputs: self
-        returns: A dataframe with the mutltiindex for rows and Combination for each distinct combination, and the count Frequency for how many times that combination occurs in the game.
+        returns: A dataframe with the multiindex for rows and Combination for each distinct combination, and the count Frequency for how many times that combination occurs in the game.
         """
         perm_df = self.game.results().apply(lambda row: list(row), axis = 1)
         perm_df = perm_df.value_counts().reset_index(name = 'Frequency').rename(columns = {'index': 'Combination'})

@@ -46,9 +46,9 @@ The game can be played with more than one die as long as they have the same numb
 In order to properly use the code a few things should be known.
 
 The `Die()` **class** does not require any arguments to be manually input and on default will create a 100 sided die with 'fair' (equal) weights for each face. **In order to change the number of faces use the `np.arange(1,3)` function as an argument to output a 2 sided die (coin) or anything other side count you like. Remember numpy will start at 0 so 1,3 gives 2 sides. Another option is to use `np.array([])` with string inputs to create a coin with `T` and `F` or an alphabet such as `np.array(['a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])`.** Things to know about the methods:
-    `new_weight`: This will require user input for the faces you would like to use in comma seperate numerics (ex. 1, 2, 3) and any numeric is possible for the wieght input. This will change those listed faces (sides) to the new weight so if multiple weights are wanted please run thid method multiple times for each selection of faces.
+    `new_weight`: This will require user input for the faces you would like to use in comma seperated numerics (ex. 1, 2, 3) and any numeric is possible for the weight input. This will change those listed faces (sides) to the new weight so if multiple weights are wanted please run this method multiple times for each selection of faces. If changing all faces the make sure to initialize your die with letter not numbers and this optional will become available. Entering the weights when replacing all faces will require a comma seperated list of numerical values that are in the same order as the faces and have the same total number of faces. 
     `die_roll`: This does not require an argument `rolls` but it is optional to test roll your die a certain number of times (preset at `1` for 1 roll). Use a integer for this argument.
-    `show_data`: This does not require any arguments and will naturally show a copy of the internal Pandas dataframe representing the faces and weights of the die through the argument `highlight` with a default value of `1`. Using the method with the value of `2` will return a table of the internal Pandas dataframe but with an Numpy array assortment and rows highlighted red that have any other values than `1.0` for the weight; **`display()` is required to output this**.
+    `show_data`: This does not require any arguments and will naturally show a copy of the internal Pandas dataframe representing the faces and weights of the die through the argument `highlight` with a default value of `1`. Using the method with the value of `2` will return a table of the internal Pandas dataframe but with a Numpy array assortment and rows highlighted red that have any other values than `1.0` for the weight; **`display()` is required to output this**.
     
 The `Game()` **class** does require the argument `dice` have a list of `Die()` with the same number of faces. It has no default. Things to know about the methods:
     `play`: This does not require any arguments as the default for `dice_rolls` is `1` however if rolling the set of dice more than 1 time please enter another integer value for this argument.
@@ -60,9 +60,9 @@ The `Analyzer()` **class** does require the argument `game` have an instance of 
     `combo_count`: This does not require any arguments and will return a Pandas dataframe with a multiindex for the rows and `Combination` for each distinct combination, and the column `Frequency` for the count for how many times the combination occurs in the game. These will be combinations of any order.
     `permutation`: This does not require any arguments and will return a Pandas dataframe with the mutltiindex for rows and `Combination` for each distinct combination, and the count `Frequency` for how many times that combination occurs in the game. These will be combinations of the exact order rolled.
 
-<ins>After follwing the install and import above, and understanding more of the different classes and their methods there is only one thing to do now. Test!</ins>
+<ins>After following the install and import above, and understanding more of the different classes and their methods there is only one thing to do now. Test!</ins>
 In order to best test this file working properly on your device please use the Monte_Carlo_Simulator_test.py file and run it from your command line on which you installing the package. 
-After testing has been passed then running this code will create your first die, play a game with it, and display the results along with if you hit any jackpots! Remember this is using a 100-sided die so if you get a jackpot your beat the odds of a .01% chance!!!
+After testing has been passed then running this code will create your first die, play a game with it, and display the results along with if you hit any jackpots! Remember this is using a 100-sided die so if you get a jackpot you beat the odds of a .01% chance!!!
 ```
 from Monte_Carlo_Simulator.Monte_Carlo_Simulator import Die, Game, Analyzer
 Game1 = Game([Die(), Die()])
@@ -79,12 +79,12 @@ Classes:
 class Die():
 ```
     This class is for creating a 100 sided (default count) die stored as a Pandas Dataframe. The number of faces and weights of the die will be adjustable to allow for the die to be used as any other die. 
-    The die can also be customized by the weight to allow for either a fair sided die or a unfairly distributed die.The weights are just positive numbers (integers or floats, including  0).
+    The die can also be customized by the weight to allow for either a fair sided die or an unfairly distributed die.The weights are just positive numbers (integers or floats, including  0).
     Die() will initialize a Pandas DataFrame to be used through the class.
-    inputs: self; faces: Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame. Created with a NumPy Array is mandatory.
+    inputs: self; faces: Each face of the die will show a unique number associated with that side and its corresponding weight in a Pandas DataFrame. Created with a Numpy Array is mandatory.
 
 Methods:
-1) Constuctor
+1) Constructor
 ```
     def __init__(self, faces = np.arange(1,101)):
 ```
@@ -110,7 +110,7 @@ Methods:
     def die_roll(self, rolls = 1):
 ```
         die_roll: This method is used for rolling the create die using the DataFrame holding the data and a Random function random.choices to produce a random Face.
-                  The default version does not internall store the results, however the internally stored version is commented out if otherwise wanted.
+                  The default version does not internally store the results, however the internally stored version is commented out if otherwise wanted.
         inputs: self; rolls: default to 1.
         returns: An instance of rolling the die a number of times.
 ```
@@ -176,7 +176,7 @@ C) Analyzer
 class Analyzer():
 ```
     This class will take the results of a single game and compute various descriptive statistical properties about said game.
-    inputs: self; game: A Game() object of which the play() method of Game() has been run for, to insure a .
+    inputs: self; game: A Game() object of which the play() method of Game() has been run for.
 
 1) Constructor method
 ```
@@ -199,7 +199,7 @@ class Analyzer():
 ```
     def face_count_per_roll(self):
 ```
-        face_count_per_roll: This method is for counting and siplaying each of the times a certain face of the die is rolled for each of the rolls attempted. 
+        face_count_per_roll: This method is for counting and displaying each of the times a certain face of the die is rolled for each of the rolls attempted. 
         inputs: self
         returns: A dataframe with the possible faces rolled as the columns and each roll instance of the dice as the index. The values show the number of times (count) each of the faces is rolled.
 
@@ -219,7 +219,7 @@ class Analyzer():
         permutation: This method will create a new dataframe containing the counts of each distinct combination (of only the rolled order) of faces in their current rolled order """\
         """for each of the times rolled in the game.
         inputs: self
-        returns: A dataframe with the mutltiindex for rows and Combination for each distinct combination, and the count Frequency for how many times that combination occurs in the game.
+        returns: A dataframe with the multiindex for rows and Combination for each distinct combination, and the count Frequency for how many times that combination occurs in the game.
 
         perm_df: Local variable used for holding the dataframe of permutations.
 
